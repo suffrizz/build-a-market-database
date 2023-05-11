@@ -91,6 +91,44 @@ From pedagang;
 #### Result : 
 ![image](https://github.com/suffrizz/build-a-market-database/assets/128014102/fb6e349d-909f-4ff4-ab3a-e0d51bbf2f53)
 
+### Create a store procedure to display traders by type stalls/buildings where each sells
+```delimiter $
+Create procedure lapak_pedagang()
+Begin
+	Select pedagang.id_pedagang, pedagang.nama_pedagang, lapak.jenis_lapak
+    From pedagang
+    Inner join lapak
+    On pedagang.id_pedagang = lapak.id_pedagang;
+End $
+delimiter ;
+
+Call lapak_pedagang;
+```
+#### Result :
+![image](https://github.com/suffrizz/build-a-market-database/assets/128014102/839dd523-2f43-4ebd-b8b5-7f03ee22a336)
+
+### Create a store function to make a price discount of 15% of the fee for type III and IV kiosk traders.
+``` delimiter $
+Create function discount(harga_retribusi decimal(15, 3), discount decimal(15, 2))
+Returns decimal(15, 2)
+Deterministic
+Begin
+	Declare price decimal(15, 2);
+	Declare disc_price decimal(14, 2);
+	Set disc_price = harga_retribusi * (discount / 100);
+	Set price = harga_retribusi - disc_price;
+	Return price;
+End $
+delimiter ;
+
+Select id_pedagang, tipe_lapak, jenis_lapak, discount(harga_retribusi, 15) as price
+From lapak
+Where tipe_lapak between 'Type III' and 'Type IV' and jenis_lapak = 'Kios'
+```
+#### Result : 
+
+
+
 
 
 
